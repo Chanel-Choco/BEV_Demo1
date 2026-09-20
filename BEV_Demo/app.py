@@ -2,6 +2,7 @@
 Streamlit proof-of-concept: upload an artwork -> P(AI-generated) from Model A, Model B and their ensemble,
 plus optional Grad-CAM. Run with:   streamlit run app.py
 """
+import os
 import time
 
 import streamlit as st
@@ -22,7 +23,7 @@ st.caption("Thesis proof of concept: lightweight CNNs (MobileNetV3-Small / Effic
 
 with st.sidebar:
     st.header("Settings")
-    weights_dir = st.text_input("Weights folder", value="weights",
+    weights_dir = st.text_input("Weights folder", value=os.path.join(os.path.dirname(__file__), "weights"),
                                 help="Folder containing mobilenet_lfab_model.pth and efficientnet_lfab_model.pth")
     threshold = st.slider("Decision threshold (P(AI) ≥ this → 'AI-generated')", 0.30, 0.90, 0.50, 0.01,
                           help="0.5 is what the notebooks report as the default.")
