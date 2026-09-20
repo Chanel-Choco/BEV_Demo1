@@ -14,7 +14,7 @@ import streamlit as st
 from inference import (BAND_LABELS, DEVICE, gradcam_overlay, lfab_band_shap, lfab_gains, load_models,
                        pixel_shap, predict_prob, prepare_image)
 
-st.set_page_config(page_title="AI Artwork Detector (thesis demo)", page_icon="🎨", layout="wide")
+st.set_page_config(page_title="Generated AI Art Detector (thesis demo)", page_icon="🎨", layout="wide")
 
 
 @st.cache_resource(show_spinner="Loading model weights...")
@@ -30,7 +30,7 @@ def cached_pixel_shap(_model, model_label, crop_bytes, max_evals):
     return pixel_shap(_model, crop, max_evals=max_evals)
 
 
-st.title("Generated AI Art Detection")
+st.title("Generated AI Art Detector")
 st.caption("Thesis Proof of Concept: Enhancing Lightweight CNN Models with Explainable AI for Detecting AI-Generated Art on Online Platforms")
 
 with st.sidebar:
