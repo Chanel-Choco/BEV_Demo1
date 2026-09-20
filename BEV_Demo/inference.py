@@ -42,16 +42,21 @@ def load_models(weights_dir):
     return models, missing
 
 
-def prepare_image(file_or_path):
+def prepare_image(file_or_path, force_jpeg=True):
     """Mimic Notebook 1's preprocessing so the demo sees what the models saw in training:
-    RGB -> 256x256 bilinear resize -> (JPEG inputs only) re-save at PIL's default quality ->
+    RGB -> 256x256 bilinear resize -> JPEG re-save at PIL's default quality (quality 75) ->
     then the 224 center crop + ImageNet normalisation done by EVAL_TRANSFORM.
+
+    Notebook 1 saved each resized image under its original extension, and its dataset layout lists .jpg
+    for every source, so the training images all carry one round of JPEG compression at 256x256.
+    force_jpeg=True (default) applies that to any upload (PNG/WebP too). With force_jpeg=False only
+    uploads that were already JPEG are re-saved.
 
     Returns (pil_256, tensor_1x3x224x224)."""
     img = Image.open(file_or_path)
     was_jpeg = (img.format or "").upper() in ("JPEG", "MPO")
     img = img.convert("RGB").resize((256, 256), Image.BILINEAR)
-    if was_jpeg:
+    if force_jpeg or was_jpeg:
         buf = io.BytesIO()
         img.save(buf, format="JPEG")  # PIL default quality, same as Notebook 1's .save(dest)
         buf.seek(0)
