@@ -4,5 +4,7 @@ torch
 torchvision
 streamlit
 grad-cam
+shap
+matplotlib
 pillow
 numpy
