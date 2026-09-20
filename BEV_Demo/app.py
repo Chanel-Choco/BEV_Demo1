@@ -28,7 +28,7 @@ def cached_pixel_shap(_model, model_label, crop_bytes, max_evals):
     model_label + the image bytes + max_evals form the cache key."""
     crop = np.frombuffer(crop_bytes, dtype=np.uint8).reshape(224, 224, 3)
     return pixel_shap(_model, crop, max_evals=max_evals)
-
+  
 
 st.title("Generated AI Art Detector")
 st.caption("Thesis Proof of Concept: Enhancing Lightweight CNN Models with Explainable AI for Detecting AI-Generated Art on Online Platforms")
@@ -39,6 +39,9 @@ with st.sidebar:
                                 help="Folder containing mobilenet_lfab_model.pth and efficientnet_lfab_model.pth")
     threshold = st.slider("Decision threshold (P(AI) ≥ this → 'AI-generated')", 0.30, 0.90, 0.50, 0.01,
                           help="0.5 is what the notebooks report as the default.")
+    match_training = st.checkbox("Match training preprocessing (JPEG-recompress every upload)", value=True,
+                                 help="Notebook 1 saved every training image as a 256x256 JPEG. Leave on unless "
+                                      "you are deliberately testing the effect of skipping it.")
     st.subheader("Explanations")
     show_cam = st.checkbox("Grad-CAM heatmaps", value=True)
     show_band_shap = st.checkbox("SHAP: LFAB frequency bands", value=True,
@@ -76,7 +79,7 @@ if up is None:
 results, cams, band_shap = {}, {}, {}
 with st.status("Analysing image...", expanded=True) as status:
     st.write("Preprocessing (RGB → 256×256 → center-crop 224 → normalise), same as training")
-    img256, tensor = prepare_image(up)
+    img256, tensor = prepare_image(up, force_jpeg=match_training)
     crop = np.array(img256.crop((16, 16, 240, 240)))  # the exact 224x224 pixels the models see
     time.sleep(0.2)
 
@@ -162,3 +165,4 @@ if show_pix_shap:
     plt.close(fig)
     st.caption(f"{shap_label} · {int(shap_evals)} evaluations · {elapsed:.1f} s. SHAP values sum to the change "
                f"in P(AI) between the blurred baseline and this image; fewer evaluations give coarser, noisier maps.")
+
