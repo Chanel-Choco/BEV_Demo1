@@ -30,9 +30,8 @@ def cached_pixel_shap(_model, model_label, crop_bytes, max_evals):
     return pixel_shap(_model, crop, max_evals=max_evals)
 
 
-st.title("🎨 AI-generated artwork detector")
-st.caption("Thesis proof of concept: lightweight CNNs (MobileNetV3-Small / EfficientNet-B0) with a Learnable "
-           "Frequency Attention Block (LFAB), explained with Grad-CAM and SHAP.")
+st.title("Generated AI Art Detection")
+st.caption("Thesis Proof of Concept: Enhancing Lightweight CNN Models with Explainable AI for Detecting AI-Generated Art on Online Platforms")
 
 with st.sidebar:
     st.header("Settings")
